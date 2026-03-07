@@ -153,7 +153,6 @@ export default function Home() {
         <Footer />
 
         <TaskList />
-        <p>aqui ouve uma mudança</p>
       </div>
     </div>
   );
