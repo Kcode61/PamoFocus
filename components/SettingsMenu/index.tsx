@@ -1,17 +1,21 @@
 "use client";
 import { poppins } from "@/lib/fonts";
-import { Moon, Sun, X } from "lucide-react";
+import { LogOut, Moon, Sun, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { ColorThemes } from "../ColorThemes";
 import { useThemeStore } from "@/store/themeStore";
+import Link from "next/link";
+import { signOut, User } from "firebase/auth";
+import { auth } from "@/lib/firebase-config";
 
 type MenuProps = {
   OnClose: () => void;
   isOpen: boolean;
+  usuarioLogado: User | null;
 };
 
-export function SettingsMenu({ OnClose, isOpen }: MenuProps) {
+export function SettingsMenu({ OnClose, isOpen, usuarioLogado }: MenuProps) {
   const { primary } = useThemeStore((state) => state.theme);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -26,7 +30,13 @@ export function SettingsMenu({ OnClose, isOpen }: MenuProps) {
   const toggleTheme = () => {
     setTheme(isDark ? "light" : "dark");
   };
-
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Erro ao deslogar:", error);
+    }
+  };
   return (
     <>
       {isOpen && (
@@ -47,6 +57,51 @@ export function SettingsMenu({ OnClose, isOpen }: MenuProps) {
           >
             <X size={18} className="text-gray-300" absoluteStrokeWidth />
           </button>
+        </div>
+        <div className=" flex flex-col gap-2 mb-4">
+          <p className=" mb-2 mt-2 text-gray-400 dark:text-gray-200 font-bold">
+            Conta
+          </p>
+          {usuarioLogado ? (
+            <>
+              <div className="p-3 rounded-xl bg-[#E2E4E9] dark:bg-[#202027] flex flex-col gap-1">
+                <p className="text-xs text-gray-400 dark:text-gray-400 font-bold">
+                  Conectado:
+                </p>
+
+                <p className="text-base text-slate-400 dark:text-gray-300 font-bold">
+                  {usuarioLogado
+                    ? usuarioLogado.email
+                    : "Nenhum usuário logado"}
+                </p>
+                <p className="text-xs text-slate-400 dark:text-gray-400">
+                  Suas configurações estão sincronizadas ✓
+                </p>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="rounded-xl text-gray-400 dark:text-gray-200 py-2 px-4 border cursor-pointer transition dark:border-[#202027] border-[#E2E4E9] hover:bg-[#E8EAEE]  dark:hover:bg-[#202027] flex gap-4 items-center justify-center"
+              >
+                <LogOut size={18} />
+                <span className="text-sm   font-semibold ">Sair da conta</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="text-xs text-slate-400 dark:text-gray-400 font-medium">
+                Faça login para salvar suas configurações na nuvem.
+              </p>
+              <Link
+                href="/Auth"
+                className="rounded-xl text-gray-400 dark:text-gray-200 py-2 px-4 border cursor-pointer transition dark:border-[#202027] border-[#E2E4E9] hover:bg-[#E8EAEE]  dark:hover:bg-[#202027] flex gap-4 items-center justify-center"
+              >
+                <LogOut size={18} />
+                <span className="text-sm   font-semibold ">
+                  Entrar / Criar conta
+                </span>
+              </Link>
+            </>
+          )}
         </div>
         <div className=" flex flex-col gap-4">
           <p className=" text-sm text-gray-400 dark:text-gray-200 font-bold">

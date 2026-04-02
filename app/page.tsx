@@ -1,13 +1,16 @@
 "use client";
-import "@/lib/firebase";
+
 import { Buttons } from "@/components/Buttons";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SettingsMenu } from "@/components/SettingsMenu";
 import { TaskList } from "@/components/TaskList";
+import { auth } from "@/lib/firebase-config";
 import { jetbrainsMono } from "@/lib/fonts";
 import { useThemeStore } from "@/store/themeStore";
+import { onAuthStateChanged, User } from "firebase/auth";
 import { Pause, Play, RotateCcw } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 type Modes = "Focus" | "Short Break" | "Long Break";
 export default function Home() {
@@ -22,17 +25,29 @@ export default function Home() {
     }
   };
   const { primary, secondary, accent } = useThemeStore((state) => state.theme);
+
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [time, setTime] = useState<number>(() => getModeTime("Focus"));
   const [isMode, SetMode] = useState<Modes>("Focus");
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [totalTime, setTotalTime] = useState<number>(1500);
+  const [usuario, setUsuario] = useState<User | null>(null);
   const modeColors: Record<Modes, string> = {
     Focus: primary,
     "Short Break": secondary,
     "Long Break": accent,
   };
-
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUsuario(user);
+      } else {
+        setUsuario(null);
+      }
+    });
+    return () => unsubscribe();
+  }, [router]);
   useEffect(() => {
     if (!isRunning) return;
 
@@ -70,7 +85,11 @@ export default function Home() {
     <div
       className={` ${menuOpen ? "overflow-hidden h-screen" : ""} flex flex-col items-center bg-[#F6F7F9] dark:bg-[#0B0B0F] min-h-screen py-16`}
     >
-      <SettingsMenu isOpen={menuOpen} OnClose={() => setMenuOpen(false)} />
+      <SettingsMenu
+        usuarioLogado={usuario}
+        isOpen={menuOpen}
+        OnClose={() => setMenuOpen(false)}
+      />
       <Header onOpenMenu={() => setMenuOpen(true)} />
       <div className="flex justify-center items-center flex-col  flex-1 py-3 gap-8 pb-16 px-6">
         <div className="flex items-center md:mt-0 mt-10 rounded-full gap-2 bg-[#E8EAEE] dark:bg-[#1F1F26] p-1.5">
