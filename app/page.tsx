@@ -1,7 +1,6 @@
 "use client";
 
 import { Buttons } from "@/components/Buttons";
-import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SettingsMenu } from "@/components/SettingsMenu";
 import { TaskList } from "@/components/TaskList";
@@ -33,11 +32,13 @@ export default function Home() {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [totalTime, setTotalTime] = useState<number>(1500);
   const [usuario, setUsuario] = useState<User | null>(null);
+
   const modeColors: Record<Modes, string> = {
     Focus: primary,
     "Short Break": secondary,
     "Long Break": accent,
   };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -170,7 +171,16 @@ export default function Home() {
           </button>
         </div>
 
-        <Footer />
+        <div className="flex gap-2 items-center">
+          <div
+            className={`dark:bg-[#202027] bg-gray-400  w-2 h-2 rounded-ful`}
+          ></div>
+          <div
+            className={`dark:bg-[#202027] bg-gray-400  w-2 h-2 rounded-full ${totalTime === 0 ? "bg-[#202027]" : ""}`}
+          ></div>
+          <div className="dark:bg-[#202027] bg-gray-400  w-2 h-2 rounded-full"></div>
+          <div className="dark:bg-[#202027] bg-gray-400  w-2 h-2 rounded-full"></div>
+        </div>
 
         <TaskList />
       </div>

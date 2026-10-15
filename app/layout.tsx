@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import "./globals.css";
+import { ThemeProvider } from "next-themes";
 export const metadata: Metadata = {
-  title: "FocusFlow: The Calm Timer",
+  title: "PamoFocus: The Calm Timer",
   description: "Um pamodoro feito usando next.js",
 };
-import { ThemeProvider } from "next-themes";
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -19,9 +19,9 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange={false}
         >
           {children}
         </ThemeProvider>

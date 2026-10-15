@@ -1,6 +1,5 @@
 "use client";
 
-import { Footer } from "@/components/Footer";
 import { jetbrainsMono, poppins } from "@/lib/fonts";
 import { ArrowBigRightDash } from "lucide-react";
 import Link from "next/link";
@@ -60,8 +59,6 @@ export default function Home() {
             Essa página não existe. Enquanto isso, seu tempo está passando...
           </p>
         </div>
-
-        <Footer />
 
         <Link
           href="/"
