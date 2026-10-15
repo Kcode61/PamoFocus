@@ -12,16 +12,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br" suppressHydrationWarning>
-      <body
-        className={`antialiased`}
-        cz-shortcut-listen="true"
-        z-shortcut-listen="true"
-      >
+      <body className="min-h-screen">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange={false}
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
         >
           {children}
         </ThemeProvider>
