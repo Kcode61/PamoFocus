@@ -31,6 +31,8 @@ export function SettingsMenu({ OnClose, isOpen, usuarioLogado }: MenuProps) {
     setTheme(isDark ? "light" : "dark");
   };
   const handleLogout = async () => {
+    if (!auth) return;
+
     try {
       await signOut(auth);
     } catch (error) {

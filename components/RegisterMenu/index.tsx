@@ -17,6 +17,13 @@ export function RegisterMenu({ setismodal, ismodal }: menuprops) {
   const router = useRouter();
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!auth) {
+      setErrorMsg(
+        "Firebase não configurado. Configure as variáveis NEXT_PUBLIC_FIREBASE_*.",
+      );
+      return;
+    }
+
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,

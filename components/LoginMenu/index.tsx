@@ -16,6 +16,13 @@ export function LoginMenu({ setismodal, ismodal }: menuprops) {
   const router = useRouter();
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!auth) {
+      setErrorMsg(
+        "Firebase não configurado. Configure as variáveis NEXT_PUBLIC_FIREBASE_*.",
+      );
+      return;
+    }
+
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,

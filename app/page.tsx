@@ -40,6 +40,11 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if (!auth) {
+      setUsuario(null);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUsuario(user);
