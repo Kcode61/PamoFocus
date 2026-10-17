@@ -7,6 +7,7 @@ import { TaskList } from "@/components/TaskList";
 import { auth } from "@/lib/firebase-config";
 import { jetbrainsMono } from "@/lib/fonts";
 import { useThemeStore } from "@/store/themeStore";
+import { usetimeStore } from "@/store/timeStore";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { Pause, Play, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -16,21 +17,26 @@ export default function Home() {
   const getModeTime = (mode: Modes) => {
     switch (mode) {
       case "Focus":
-        return 1500;
+        return timeFocus;
       case "Short Break":
-        return 300;
+        return timeShort;
       case "Long Break":
-        return 900;
+        return timeBreak;
+      default:
+        return timeFocus;
     }
   };
+  const router = useRouter();
+  const timeFocus = usetimeStore((state) => state["time-Focus"]);
+  const timeShort = usetimeStore((state) => state["time-Short"]);
+  const timeBreak = usetimeStore((state) => state["time-Break"]);
   const { primary, secondary, accent } = useThemeStore((state) => state.theme);
 
-  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [time, setTime] = useState<number>(() => getModeTime("Focus"));
+  const [time, setTime] = useState<number>(() => timeFocus);
   const [isMode, SetMode] = useState<Modes>("Focus");
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [totalTime, setTotalTime] = useState<number>(1500);
+  const [totalTime, setTotalTime] = useState<number>(timeFocus);
   const [usuario, setUsuario] = useState<User | null>(null);
 
   const modeColors: Record<Modes, string> = {
@@ -54,6 +60,10 @@ export default function Home() {
     });
     return () => unsubscribe();
   }, [router]);
+  useEffect(() => {
+    setTime(getModeTime(isMode));
+    setTotalTime(getModeTime(isMode));
+  }, [isMode, timeFocus, timeShort, timeBreak]);
   useEffect(() => {
     if (!isRunning) return;
 
@@ -123,12 +133,12 @@ export default function Home() {
 
         <div className="relative  ">
           <div
-            className=" w-[300px] h-[300px] ease duration-300 rounded-full flex items-center justify-center [--track:#E8EAEE] dark:[--track:#202027]"
+            className=" w-[325px] h-[325px] ease duration-300 rounded-full flex items-center justify-center [--track:#E8EAEE] dark:[--track:#202027]"
             style={{
               background: `conic-gradient(${modeColors[isMode]} ${porcentagem}%, var(--track) 0%)`,
             }}
           >
-            <div className="w-[286px] h-[286px] bg-white dark:bg-[#0B0B0F] rounded-full flex items-center justify-center text-white text-3xl"></div>
+            <div className="w-[310px] h-[310px] bg-white dark:bg-[#0B0B0F] rounded-full flex items-center justify-center text-white text-3xl"></div>
           </div>
 
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -178,13 +188,88 @@ export default function Home() {
 
         <div className="flex gap-2 items-center">
           <div
-            className={`dark:bg-[#202027] bg-gray-400  w-2 h-2 rounded-ful`}
+            style={
+              isRunning
+                ? {
+                    backgroundColor: `color-mix(in srgb, ${
+                      isMode === "Focus"
+                        ? primary
+                        : isMode === "Short Break"
+                          ? secondary
+                          : accent
+                    } 40%, transparent)`,
+                  }
+                : undefined
+            }
+            className={`w-2 h-2 rounded-full dark:bg-[#202027] bg-gray-400 ${
+              isRunning
+                ? "animate-pulse [animation-duration:800ms] [animation-delay:0ms]"
+                : ""
+            }`}
           ></div>
+
           <div
-            className={`dark:bg-[#202027] bg-gray-400  w-2 h-2 rounded-full ${totalTime === 0 ? "bg-[#202027]" : ""}`}
+            style={
+              isRunning
+                ? {
+                    backgroundColor: `color-mix(in srgb, ${
+                      isMode === "Focus"
+                        ? primary
+                        : isMode === "Short Break"
+                          ? secondary
+                          : accent
+                    } 50%, transparent)`,
+                  }
+                : undefined
+            }
+            className={`w-2 h-2 rounded-full dark:bg-[#202027] bg-gray-400 ${
+              isRunning
+                ? "animate-pulse [animation-duration:800ms] [animation-delay:150ms]"
+                : ""
+            }`}
           ></div>
-          <div className="dark:bg-[#202027] bg-gray-400  w-2 h-2 rounded-full"></div>
-          <div className="dark:bg-[#202027] bg-gray-400  w-2 h-2 rounded-full"></div>
+
+          <div
+            style={
+              isRunning
+                ? {
+                    backgroundColor: `color-mix(in srgb, ${
+                      isMode === "Focus"
+                        ? primary
+                        : isMode === "Short Break"
+                          ? secondary
+                          : accent
+                    } 60%, transparent)`,
+                  }
+                : undefined
+            }
+            className={`w-2 h-2 rounded-full dark:bg-[#202027] bg-gray-400 ${
+              isRunning
+                ? "animate-pulse [animation-duration:800ms] [animation-delay:300ms]"
+                : ""
+            }`}
+          ></div>
+
+          <div
+            style={
+              isRunning
+                ? {
+                    backgroundColor: `color-mix(in srgb, ${
+                      isMode === "Focus"
+                        ? primary
+                        : isMode === "Short Break"
+                          ? secondary
+                          : accent
+                    } 70%, transparent)`,
+                  }
+                : undefined
+            }
+            className={`w-2 h-2 rounded-full dark:bg-[#202027] bg-gray-400 ${
+              isRunning
+                ? "animate-pulse [animation-duration:800ms] [animation-delay:450ms]"
+                : ""
+            }`}
+          ></div>
         </div>
 
         <TaskList />
