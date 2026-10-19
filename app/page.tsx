@@ -11,7 +11,7 @@ import { usetimeStore } from "@/store/timeStore";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { Pause, Play, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 type Modes = "Focus" | "Short Break" | "Long Break";
 export default function Home() {
   const getModeTime = (mode: Modes) => {
@@ -24,6 +24,30 @@ export default function Home() {
         return timeBreak;
       default:
         return timeFocus;
+    }
+  };
+  const playStartSound = () => {
+    const audio = new Audio("/sounds/tempoinicio.mp3");
+    audio.volume = 0.5;
+    audio.play();
+  };
+  const endAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const playEndSound = () => {
+    if (!endAudioRef.current) {
+      endAudioRef.current = new Audio("/sounds/tempofinal.mp3");
+      endAudioRef.current.volume = 0.5;
+      endAudioRef.current.loop = true;
+    }
+
+    endAudioRef.current.currentTime = 0;
+    endAudioRef.current.play();
+  };
+
+  const stopEndSound = () => {
+    if (endAudioRef.current) {
+      endAudioRef.current.pause();
+      endAudioRef.current.currentTime = 0;
     }
   };
   const router = useRouter();
@@ -70,8 +94,6 @@ export default function Home() {
     const interval = setInterval(() => {
       setTime((prev) => {
         if (prev <= 1) {
-          clearInterval(interval);
-          setIsRunning(false);
           return 0;
         }
         return prev - 1;
@@ -80,6 +102,12 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, [isRunning]);
+  useEffect(() => {
+    if (isRunning && time === 0) {
+      setIsRunning(false);
+      playEndSound();
+    }
+  }, [time, isRunning]);
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
@@ -152,7 +180,12 @@ export default function Home() {
 
         <div className="flex gap-4 items-center">
           <button
-            onClick={() => setIsRunning(!isRunning)}
+            onClick={() => {
+              setIsRunning(!isRunning);
+              if (!isRunning) {
+                playStartSound();
+              }
+            }}
             style={{
               backgroundColor:
                 isMode === "Focus"
@@ -177,6 +210,7 @@ export default function Home() {
           </button>
           <button
             onClick={() => {
+              stopEndSound();
               setIsRunning(false);
               setTime(getModeTime(isMode));
             }}
