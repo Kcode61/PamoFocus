@@ -21,6 +21,7 @@ export function TaskList() {
       },
     ]);
   };
+
   const handleAddItem = () => {
     if (!value.trim()) {
       alert("Error 404: Digite uma mensagem valida");
@@ -44,7 +45,7 @@ export function TaskList() {
     <div className="flex flex-col gap-2">
       <div
         onClick={() => SetOpenTask(!OpenTask)}
-        className="rounded-xl z-1 hover:text-gray-600 dark:hover:text-white cursor-pointer transition max-w-[290px] items-center  px-4 py-3 dark:bg-[#202027] bg-[#E8EAEE] text-[#768196] flex justify-between"
+        className="rounded-xl z-1 hover:text-gray-600 dark:hover:text-white cursor-pointer transition items-center  px-4 py-3 dark:bg-[#202027] bg-[#E8EAEE] text-[#768196] flex justify-between"
       >
         <div className="flex gap-2 items-center">
           <ListTodo size={18} />
@@ -59,19 +60,20 @@ export function TaskList() {
       </div>
 
       <div
-        className={`${OpenTask === true ? "opacity-100 translaye-y-0 bg-[#E8EAEE] dark:bg-[#202027]" : " -translate-y-5 z-0 dark:bg-[#17171c] opacity-0"} max-w-[290px] transition ease duration-300 py-4 px-2 border border-[#E2E4E9] dark:border-none  rounded-xl flex flex-col text-[#768196] `}
+        className={`${OpenTask === true ? "opacity-100 translaye-y-0 bg-[#E8EAEE] dark:bg-[#202027]" : " -translate-y-5 z-0 dark:bg-[#17171c] opacity-0"}  transition ease duration-300 py-4 px-2 border border-[#E2E4E9] dark:border-none  rounded-xl flex flex-col text-[#768196] `}
       >
-        <div className="flex-1 flex gap-2 items-center">
+        <div className="flex items-center">
           <input
             type="text"
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            className="dark:bg-[#0B0B0F] bg-[#F6F7F9] py-1.5 px-4 focus:outline-none placeholder:text-[#768196]  focus:ring-2 dark:focus:ring-[#425BD7] focus:ring-gray-300 text-white  rounded-xl"
+            className="h-10 min-w-0 flex-1 dark:bg-[#0B0B0F] bg-[#F6F7F9] px-4 focus:outline-none placeholder:text-[#768196] focus:ring-2 dark:focus:ring-[#425BD7] focus:ring-gray-300 dark:text-white text-gray-900 rounded-l-xl"
             placeholder="Add a task..."
           />
+
           <button
             onClick={handleAddItem}
-            className="dark:bg-[#0B0B0F] bg-[#F6F7F9] hover:text-[#576DDB] text-[#768196] rounded-xl  cursor-pointer font-bold p-2  hover:scale-95 transition ease duration-300  "
+            className="h-10 w-10 flex shrink-0 items-center justify-center dark:bg-[#0B0B0F] bg-[#F6F7F9] hover:text-[#576DDB] text-[#768196] rounded-r-xl cursor-pointer hover:scale-95 transition ease duration-300"
           >
             <Plus size={18} absoluteStrokeWidth />
           </button>
