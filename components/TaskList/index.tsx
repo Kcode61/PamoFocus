@@ -75,18 +75,18 @@ export function TaskList() {
       <div
         className={`${OpenTask === true ? "opacity-100 translaye-y-0 bg-[#E8EAEE] dark:bg-[#202027]" : " -translate-y-5 z-0 dark:bg-[#17171c] opacity-0"}  transition ease duration-300 py-4 px-2 border border-[#E2E4E9] dark:border-none  rounded-xl flex flex-col text-[#768196] `}
       >
-        <div className="flex items-center">
+        <div className="flex items-center rounded-xl focus-within:ring-2 focus-within:ring-[#8B5CF6]">
           <input
             type="text"
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            className="h-10 min-w-0 flex-1 dark:bg-[#0B0B0F] bg-[#F6F7F9] px-4 focus:outline-none placeholder:text-[#768196] focus:ring-2 dark:focus:ring-[#425BD7] focus:ring-gray-300 dark:text-white text-gray-900 rounded-l-xl"
+            className="h-10 min-w-0 flex-1 dark:bg-[#0B0B0F] bg-[#F6F7F9] px-4 focus:outline-none placeholder:text-[#768196] dark:text-white text-gray-900 rounded-l-xl"
             placeholder="Add a task..."
           />
 
           <button
             onClick={handleAddItem}
-            className="h-10 w-10 flex shrink-0 items-center justify-center dark:bg-[#0B0B0F] bg-[#F6F7F9] hover:text-[#576DDB] text-[#768196] rounded-r-xl cursor-pointer hover:scale-95 transition ease duration-300"
+            className="h-10 w-10 flex shrink-0 items-center justify-center dark:bg-[#0B0B0F] bg-[#F6F7F9] hover:text-[#8B5CF6] text-[#768196] rounded-r-xl cursor-pointer hover:scale-95 transition ease duration-300"
           >
             <Plus size={18} absoluteStrokeWidth />
           </button>
@@ -122,7 +122,7 @@ export function TaskList() {
                       </div>
                     </label>
                     <p
-                      className={`font-medium transition break-all ${
+                      className={`font-medium transition text-sm break-all ${
                         listItem.complete
                           ? "line-through text-gray-500"
                           : "text-white"
