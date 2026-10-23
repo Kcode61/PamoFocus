@@ -1,6 +1,6 @@
 "use client";
 import { useThemeStore } from "@/store/themeStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type theme = {
   primary: string;
@@ -12,7 +12,21 @@ type theme = {
 export function ColorThemes() {
   const [activeTheme, setActiveTheme] = useState<number | null>(null);
   const SetColorTheme = useThemeStore((state) => state.setTheme);
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("color-theme");
 
+    if (savedTheme) {
+      const theme = JSON.parse(savedTheme);
+
+      setActiveTheme(theme.id);
+
+      SetColorTheme({
+        primary: theme.primary,
+        secondary: theme.secondary,
+        accent: theme.accent,
+      });
+    }
+  }, [SetColorTheme]);
   const themes: theme[] = [
     {
       id: 1,
@@ -73,6 +87,8 @@ export function ColorThemes() {
                 secondary: theme.secondary,
                 accent: theme.accent,
               });
+
+              localStorage.setItem("color-theme", JSON.stringify(theme));
             }}
             style={{
               borderColor: activeTheme === theme.id ? theme.primary : "#202027",

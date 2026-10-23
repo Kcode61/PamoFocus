@@ -10,10 +10,8 @@ export function TaskList() {
   const [OpenTask, SetOpenTask] = useState(true);
   const [value, setValue] = useState("");
 
-  const [list, setList] = useState<ListItem[]>(() => {
-    const savedList = localStorage.getItem("tasks");
-    return savedList ? JSON.parse(savedList) : [];
-  });
+  const [list, setList] = useState<ListItem[]>([]);
+  const [loaded, setLoaded] = useState(false);
   const handleaddListItem = (value: string) => {
     setList([
       ...list,
@@ -25,8 +23,14 @@ export function TaskList() {
     ]);
   };
   useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(list));
-  }, [list]);
+    const savedList = localStorage.getItem("tasks");
+
+    if (savedList) {
+      setList(JSON.parse(savedList));
+    }
+
+    setLoaded(true);
+  }, []);
   const handleAddItem = () => {
     if (!value.trim()) {
       alert("Error 404: Digite uma mensagem valida");
@@ -45,7 +49,11 @@ export function TaskList() {
   const handleRemove = (id: string) => {
     setList([...list.filter((item) => item.id !== id)]);
   };
-
+  useEffect(() => {
+    if (loaded) {
+      localStorage.setItem("tasks", JSON.stringify(list));
+    }
+  }, [list, loaded]);
   return (
     <div className="flex flex-col gap-2">
       <div
