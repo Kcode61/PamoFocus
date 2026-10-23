@@ -11,9 +11,9 @@ export function Header({ onOpenMenu }: HeaderProps) {
         <span
           className={`font-semibold   text-black dark:text-white ${poppins.className}`}
         >
-          Focus
+          Pamo
         </span>
-        Flow
+        Focus
       </h1>
 
       <button

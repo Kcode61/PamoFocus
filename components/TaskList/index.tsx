@@ -1,6 +1,6 @@
 "use client";
 import { Check, ChevronDown, ChevronUp, ListTodo, Plus, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 type ListItem = {
   id: string;
   label: string;
@@ -10,7 +10,10 @@ export function TaskList() {
   const [OpenTask, SetOpenTask] = useState(true);
   const [value, setValue] = useState("");
 
-  const [list, setList] = useState<ListItem[]>([]);
+  const [list, setList] = useState<ListItem[]>(() => {
+    const savedList = localStorage.getItem("tasks");
+    return savedList ? JSON.parse(savedList) : [];
+  });
   const handleaddListItem = (value: string) => {
     setList([
       ...list,
@@ -21,7 +24,9 @@ export function TaskList() {
       },
     ]);
   };
-
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(list));
+  }, [list]);
   const handleAddItem = () => {
     if (!value.trim()) {
       alert("Error 404: Digite uma mensagem valida");
